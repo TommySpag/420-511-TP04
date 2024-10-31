@@ -29,7 +29,7 @@ public class RayCast : MonoBehaviour
             // Si l'objet détecté est à moins de 1 unité de distance
             if (hit.distance < 1)
             {
-
+                //À effectuer une action plus tard
             }
         }
 
@@ -48,7 +48,7 @@ public class RayCast : MonoBehaviour
             // Si l'objet détecté est à moins de 1 unité de distance
             if (hit.distance < 1)
             {
-
+                //À effectuer une action plus tard
             }
         }
 
