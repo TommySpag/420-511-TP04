@@ -86,7 +86,7 @@ public class HealthBarManager : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
-            UnityEditor.EditorApplication.isPlaying = false;
+            GameObject.Find("ClairePlayer").GetComponent<ClaireController>().ClaireDead();
         }
         txt.text = ((Math.Round(currentHealth * 100))).ToString() + "%";
     }

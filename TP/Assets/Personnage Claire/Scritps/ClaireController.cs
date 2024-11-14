@@ -22,7 +22,7 @@ public class ClaireController : MonoBehaviour {
     [SerializeField] AudioClip sndJump, sndImpact, sndLeftFoot, sndRightFoot;
     bool switchFoot = false;
 
-    [SerializeField] bool isJumping = false;
+    [SerializeField] public bool isJumping = false;
 
     private void Awake()
     {
@@ -107,9 +107,11 @@ public class ClaireController : MonoBehaviour {
         }
 
         //curve de saut
-        if(isJumping)
-        claireCapsule.height = claireAnimator.GetFloat("colheight");
-              
+        if (isJumping)
+        {
+            claireCapsule.height = claireAnimator.GetFloat("colheight");
+        }
+                
     }
 
     private void FixedUpdate()
