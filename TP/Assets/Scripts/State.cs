@@ -33,8 +33,8 @@ public class State
     protected NavMeshAgent agent;        // Agent de navigation pour les déplacements
 
     // Variables de distance et d'angle pour détecter le joueur
-    float visDist = 5.0f;               // Distance de vision
-    float visAngle = 30.0f;              // Angle de vision
+    float visDist = 7.0f;               // Distance de vision
+    float visAngle = 360.0f;              // Angle de vision
     float attDist = 1.0f;              // Distance de tir
 
     // Constructeur pour initialiser les paramètres de l'état

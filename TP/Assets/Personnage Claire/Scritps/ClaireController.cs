@@ -23,6 +23,7 @@ public class ClaireController : MonoBehaviour {
     bool switchFoot = false;
 
     [SerializeField] public bool isJumping = false;
+    public bool canMove = true;
 
     private void Awake()
     {
@@ -36,101 +37,105 @@ public class ClaireController : MonoBehaviour {
 
         axisH = Input.GetAxis("Horizontal");
         axisV = Input.GetAxis("Vertical");
-
-        if(axisV>0)
+        if (canMove)
         {
-            if(Input.GetKey(KeyCode.LeftControl))
+            if (axisV > 0)
             {
-                transform.Translate(Vector3.forward * runSpeed * axisV * Time.deltaTime);
-                claireAnimator.SetFloat("run", axisV);
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    transform.Translate(Vector3.forward * runSpeed * axisV * Time.deltaTime);
+                    claireAnimator.SetFloat("run", axisV);
+                }
+                else
+                {
+                    transform.Translate(Vector3.forward * walkSpeed * axisV * Time.deltaTime);
+                    claireAnimator.SetBool("walk", true);
+                    claireAnimator.SetFloat("run", 0);
+                }
             }
             else
             {
-                transform.Translate(Vector3.forward * walkSpeed * axisV * Time.deltaTime);
-                claireAnimator.SetBool("walk", true);
-                claireAnimator.SetFloat("run", 0);
-            }            
-        }
-        else
-        {
-            claireAnimator.SetBool("walk", false);
-        }
-
-        if (axisH != 0 && axisV == 0)
-        {
-            claireAnimator.SetFloat("h", axisH);
-        }
-        else
-        {
-            claireAnimator.SetFloat("h", 0);
-        }
-
-
-        transform.Rotate(Vector3.up * rotSpeed * Time.deltaTime * axisH);
-
-        if(axisV < 0)
-        {            
-            claireAnimator.SetBool("walkBack", true);
-            claireAnimator.SetFloat("run", 0);
-            transform.Translate(Vector3.forward * walkSpeed * axisV * Time.deltaTime);
-        }
-        else
-        {
-            claireAnimator.SetBool("walkBack", false);            
-
-        }
-
-        //Idle Dance Twerk
-
-        if(axisH==0 && axisV==0)
-        {
-            countdown -= Time.deltaTime;
-
-            if(countdown<=0)
-            {
-                claireAnimator.SetBool("dance", true);
-                transform.Find("AudioDance").GetComponent<AudioSource>().enabled = true;
+                claireAnimator.SetBool("walk", false);
             }
-        }
-        else
-        {
-            countdown = timeout;
-            claireAnimator.SetBool("dance", false);
-            transform.Find("AudioDance").GetComponent<AudioSource>().enabled = false;
-        }
 
-        //Debug Dead 
+            if (axisH != 0 && axisV == 0)
+            {
+                claireAnimator.SetFloat("h", axisH);
+            }
+            else
+            {
+                claireAnimator.SetFloat("h", 0);
+            }
 
-        if(Input.GetKeyDown(KeyCode.AltGr))
-        {
-            ClaireDead();
-        }
 
-        //curve de saut
-        if (isJumping)
-        {
-            claireCapsule.height = claireAnimator.GetFloat("colheight");
+            transform.Rotate(Vector3.up * rotSpeed * Time.deltaTime * axisH);
+
+            if (axisV < 0)
+            {
+                claireAnimator.SetBool("walkBack", true);
+                claireAnimator.SetFloat("run", 0);
+                transform.Translate(Vector3.forward * walkSpeed * axisV * Time.deltaTime);
+            }
+            else
+            {
+                claireAnimator.SetBool("walkBack", false);
+
+            }
+
+            //Idle Dance Twerk
+
+            if (axisH == 0 && axisV == 0)
+            {
+                countdown -= Time.deltaTime;
+
+                if (countdown <= 0)
+                {
+                    claireAnimator.SetBool("dance", true);
+                    transform.Find("AudioDance").GetComponent<AudioSource>().enabled = true;
+                }
+            }
+            else
+            {
+                countdown = timeout;
+                claireAnimator.SetBool("dance", false);
+                transform.Find("AudioDance").GetComponent<AudioSource>().enabled = false;
+            }
+
+            //Debug Dead 
+
+            if (Input.GetKeyDown(KeyCode.AltGr))
+            {
+                ClaireDead();
+            }
+
+            //curve de saut
+            if (isJumping)
+            {
+                claireCapsule.height = claireAnimator.GetFloat("colheight");
+            }
         }
                 
     }
 
     private void FixedUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && !isJumping)
+        if(canMove)
         {
-            isJumping = true;
-            rb.AddForce(Vector3.up * jumpForce);
-            claireAudioSource.pitch = 1f;
-            claireAnimator.SetTrigger("jump");
-            claireAudioSource.PlayOneShot(sndJump);
+            if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
+            {
+                isJumping = true;
+                rb.AddForce(Vector3.up * jumpForce);
+                claireAudioSource.pitch = 1f;
+                claireAnimator.SetTrigger("jump");
+                claireAudioSource.PlayOneShot(sndJump);
+            }
         }
     }
 
     public void ClaireDead()
     {
         claireAnimator.SetTrigger("dead");
-        GetComponent<ClaireController>().enabled = false;
-
+        this.canMove = false;
     }
 
     public void setSpeed()
